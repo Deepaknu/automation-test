@@ -22,7 +22,7 @@ public class ScriptHelper {
 	public static String websiteURL;
 	public static String browser;
 	public static boolean spoofingEnabled;
-	public static int maxPageLoadTime;
+	public static int maxPageLoadTime=25;
 
 	public static int implicitlyWait;
 

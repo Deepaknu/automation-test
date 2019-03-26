@@ -79,10 +79,7 @@ public class BrowserFactory extends ScriptHelper {
 		}catch(Exception e){
 			maxPageLoadTime = 25;
 		}
-
-		if (maxPageLoadTime > 0) {
-			setMaxPageLoadTime(maxPageLoadTime);
-		}
+		setMaxPageLoadTime(maxPageLoadTime);
 		driver.manage().window().maximize();
 		driver.get(websiteURL);
 		return driver;

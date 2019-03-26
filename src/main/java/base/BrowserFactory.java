@@ -74,6 +74,11 @@ public class BrowserFactory extends ScriptHelper {
 		if (implicitlyWait > 0) {
 			implicitlyWait(implicitlyWait);
 		}
+		try{
+			maxPageLoadTime = Integer.parseInt(LoadConfigFile.getInstance().getProperty("maxPageLoadTime"));
+		}catch(Exception e){
+			maxPageLoadTime = 25;
+		}
 
 		if (maxPageLoadTime > 0) {
 			setMaxPageLoadTime(maxPageLoadTime);

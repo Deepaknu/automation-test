@@ -14,7 +14,8 @@ import org.testng.asserts.SoftAssert;
 
 import com.aventstack.extentreports.ExtentReports;
 import com.aventstack.extentreports.ExtentTest;
- 
+import util.LoadConfigFile;
+
 public class ScriptHelper {
 	
 
@@ -22,6 +23,7 @@ public class ScriptHelper {
 	public static String browser;
 	public static boolean spoofingEnabled;
 	public static int maxPageLoadTime;
+
 	public static int implicitlyWait;
 
 	public static String FS = File.separator;
@@ -47,7 +49,7 @@ public class ScriptHelper {
 	public static ITestResult result;
 	public static URI uri;
 
-	public static final String OUTPUT_FOLDER = "./Results/";
+	public static final String OUTPUT_FOLDER = "./results/";
 
 	public static ExtentReports extent;
 	public static ISuite suite;

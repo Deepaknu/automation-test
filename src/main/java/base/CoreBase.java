@@ -15,8 +15,11 @@ import com.aventstack.extentreports.ExtentReports;
 import com.aventstack.extentreports.ExtentTest;
 import com.aventstack.extentreports.MediaEntityBuilder;
 import com.aventstack.extentreports.MediaEntityModelProvider;
+import com.aventstack.extentreports.Status;
 import com.aventstack.extentreports.markuputils.ExtentColor;
 import com.aventstack.extentreports.markuputils.MarkupHelper;
+
+import util.LoadConfigFile;
 
 public class CoreBase {
 
@@ -70,27 +73,47 @@ public class CoreBase {
 	}
 
 	public static void reportVP(String stepStatus, String reportDescription) {
+
+		LoadConfigFile.getInstance();
+		boolean screenshotForPassStep = LoadConfigFile.getValue("TakeScreenshotForPassedStep").contains("true");
+		boolean screenshotForFailStep = LoadConfigFile.getValue("TakeScreenshotForFailedStep").contains("true");
+		boolean screenshotForAllSteps = LoadConfigFile.getValue("TakeScreenshotForAllSteps").contains("true");
+
+		if (screenshotForAllSteps) {
+			screenshotForPassStep = true;
+			screenshotForFailStep = true;
+		}
+
 		ExtentTest tes = ScriptHelper.getTest();
 		MediaEntityModelProvider img = null;
-		String scrnshtName = capureScreen();
-		if (stepStatus.equalsIgnoreCase("FAIL") || stepStatus.equalsIgnoreCase("WARNING")) {
+
+		if (!stepStatus.equalsIgnoreCase(Status.INFO.toString())) {
 			try {
+				String scrnshtName = capureScreen();
 				scrnshtName = "./screenshots/" + scrnshtName + ".jpg";
 				img = MediaEntityBuilder.createScreenCaptureFromPath(scrnshtName).build();
 			} catch (IOException e) {
+				System.out.println("Exception occured building Media Entity Builder :: " + e.getMessage());
 			}
 		}
-		if (stepStatus.equalsIgnoreCase("PASS")) {
-			tes.pass("Passed:" + reportDescription, img);
-		} else if (stepStatus.equalsIgnoreCase("FAIL")) {
-			tes.fail(MarkupHelper.createLabel("Failed:" + reportDescription, ExtentColor.ORANGE));
-			tes.fail("Refer Screenshot", img);
-			throw new RuntimeException();
-		} else if (stepStatus.equalsIgnoreCase("WARNING")) {
+		if (stepStatus.equalsIgnoreCase(Status.PASS.toString())) {
+			tes.pass("Passed:" + reportDescription);
+			if (screenshotForPassStep) {
+				tes.pass("Refer Screenshot:" + reportDescription, img);
+			}
+		} else if (stepStatus.equalsIgnoreCase(Status.FAIL.toString())) {
+			tes.fail(MarkupHelper.createLabel("Failed:" + reportDescription, ExtentColor.RED));
+			if (screenshotForFailStep) {
+				tes.fail("Refer Screenshot", img);
+			}
+		} else if (stepStatus.equalsIgnoreCase(Status.WARNING.toString())) {
 			tes.warning(MarkupHelper.createLabel("Warning:" + reportDescription, ExtentColor.ORANGE));
 			tes.warning("Refer Screenshot", img);
-		} else if (stepStatus.equalsIgnoreCase("INFO")) {
+		} else if (stepStatus.equalsIgnoreCase(Status.INFO.toString())) {
 			tes.info("Info:" + reportDescription);
+			if (screenshotForAllSteps) {
+				tes.info("Refer Screenshot", img);
+			}
 		}
 	}
 }

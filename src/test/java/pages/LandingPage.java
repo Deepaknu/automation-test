@@ -24,46 +24,32 @@ public class LandingPage {
 //
 //	@FindBy(css = ".bag")
 //	WebElement linkBagIcon;
-
+	/**
+	 * Method to over on any menu in the header
+	 * 
+	 * @param menuName - options [Men,Women,Outerwear,Gear,Home,Guide,Clearance]
+	 */
 	public void hoverToAnyMenu(String menuName) {
-		String xpath = null;
-		switch (menuName) {
-		case "Men":
-			xpath = "//div[contains(@class,'styles__CategoryRootItem') and contains(.,'Men')]";
-			break;
-		case "Women":
-			xpath = "//div[contains(@class,'styles__CategoryRootItem') and contains(.,'Women')]";
-			break;
-		case "Outerwear":
-			xpath = "//div[contains(@class,'styles__CategoryRootItem') and contains(.,'Outerwear')]";
-			break;
-		case "Gear":
-			xpath = "//div[contains(@class,'styles__CategoryRootItem') and contains(.,'Gear')]";
-			break;
-		case "Home":
-			xpath = "//div[contains(@class,'styles__CategoryRootItem') and contains(.,'Home')]";
-			break;
-		case "GuideToEB":
-			xpath = "//div[contains(@class,'styles__CategoryRootItem') and contains(.,'Guide')]";
-			break;
-		case "Clearance":
-			xpath = "//div[contains(@class,'styles__CategoryRootItem') and contains(.,'Clearance')]";
-			break;
-		 
-		}
-		WebElement menu = ScriptHelper.getDriver().findElement(By.xpath(xpath));
+
+		WebElement menu = ScriptHelper.getDriver().findElement(
+				By.xpath("//div[contains(@class,'styles__CategoryRootItem') and contains(.,'" + menuName + "')]"));
 		ScriptHelper.mousehover(menu);
+
 		WebElement focusedFlyOut = ScriptHelper.getDriver()
 				.findElement(By.xpath("//div[contains(@class,'FocusedCategoryDropdown')]"));
-		ScriptHelper.explicitWaitVisibilityOfElement(focusedFlyOut, 10);
+		ScriptHelper.explicitWaitVisibilityOfElement(focusedFlyOut, 30);
+
 		Assert.assertEquals(focusedFlyOut.isDisplayed(), true, "Flyout menu not displayed on hovering main Menu");
 	}
 
 	public HashMap<String, String> getSubCategoryLinks() {
 		HashMap<String, String> hMap = new HashMap<String, String>();
 		int counter = 1;
-		List<WebElement> linkProducts = ScriptHelper.getDriver()
+		List<WebElement> linkProducts;
+
+		linkProducts = ScriptHelper.getDriver()
 				.findElements(By.xpath("//div[contains(@class,'FocusedCategoryDropdown')]/div/div/div/a"));
+
 		for (WebElement elem : linkProducts) {
 			hMap.put(counter + "_" + elem.getText().toUpperCase(), elem.getAttribute("href"));
 			counter++;

@@ -6,9 +6,17 @@ import java.util.List;
 import java.util.Map;
 
 import org.openqa.selenium.By;
+import org.openqa.selenium.JavascriptExecutor;
 import org.openqa.selenium.WebDriver;
+import org.openqa.selenium.WebElement;
+import org.openqa.selenium.support.ui.ExpectedCondition;
+import org.openqa.selenium.support.ui.ExpectedConditions;
+import org.openqa.selenium.support.ui.FluentWait;
+import org.openqa.selenium.support.ui.WebDriverWait;
 import org.testng.annotations.Listeners;
 import org.testng.annotations.Test;
+
+import com.google.common.base.Predicate;
 
 import base.CoreBase;
 import base.ScriptHelper;
@@ -46,7 +54,7 @@ public class TestScript01 extends CoreBase {
 
 	@Test
 	public void verifyGuideToEBMenuLinks() {
-		verifyAnyMenuLinks("GuideToEB");
+		verifyAnyMenuLinks("Guide");
 	}
 
 	@Test
@@ -60,9 +68,7 @@ public class TestScript01 extends CoreBase {
 		LandingPage landingPage = new LandingPage();
 		landingPage.hoverToAnyMenu(menu);
 		reportVP(INFO, "Hovering on " + menu + " Menu is completed");
-
 		verifySubCategoryMenu(landingPage, menu);
-
 	}
 
 	@SuppressWarnings("rawtypes")
@@ -78,8 +84,11 @@ public class TestScript01 extends CoreBase {
 
 	public void checkAnyPageContainsError(String sectionName) {
 		driver = ScriptHelper.getDriver();
-		StringBuilder pageSrc = new StringBuilder(
-				driver.findElement(By.tagName("body")).getText().replaceAll("[^a-zA-Z0-9]", ""));
+		StringBuilder pageSrc = null;
+		WebDriverWait wait = new WebDriverWait(driver, 30);
+		wait.until(ExpectedConditions.refreshed(ExpectedConditions.visibilityOfElementLocated(By.xpath("//body"))));
+		pageSrc = new StringBuilder(driver.findElement(By.tagName("body")).getText().replaceAll("[^a-zA-Z0-9]", ""));
+
 		List<String> errMsgs = new ArrayList<>();
 		errMsgs.add("nomatchesfound");
 		errMsgs.add("unknownerror");

@@ -54,6 +54,7 @@ public class BaseFactory extends CoreBase {
 				}
 				choptions.addArguments("disable-infobars");
 				choptions.addArguments("--disable-extensions");
+				choptions.addArguments("--start-maximized");
 				driver = new ChromeDriver(choptions);
 			}
 

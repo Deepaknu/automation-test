@@ -1,5 +1,6 @@
 package base;
 
+import org.openqa.selenium.JavascriptExecutor;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.interactions.Actions;
@@ -37,6 +38,13 @@ public class ScriptHelper {
 		WebDriverWait elementToBeVisible = new WebDriverWait(getDriver(), time);
 		elementToBeVisible.until(ExpectedConditions.visibilityOf(element));
 	}
-	
-	
+
+	public static Boolean checkStateSeeking() throws InterruptedException {
+		JavascriptExecutor js = (JavascriptExecutor) getDriver();
+		Boolean seekingState = (Boolean) js.executeScript("return document.readyState").equals("complete");
+		while (seekingState) {
+			seekingState = (Boolean) js.executeScript("return document.readyState").equals("complete");
+		}
+		return seekingState;
+	}
 }

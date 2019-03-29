@@ -11,7 +11,6 @@ import org.openqa.selenium.chrome.ChromeOptions;
 import org.openqa.selenium.firefox.FirefoxDriver;
 import org.openqa.selenium.firefox.FirefoxOptions;
 import org.openqa.selenium.firefox.FirefoxProfile;
-import org.openqa.selenium.ie.InternetExplorerDriver;
 
 import com.aventstack.extentreports.ExtentReports;
 import com.aventstack.extentreports.ExtentTest;
@@ -23,26 +22,26 @@ import util.LoadConfigFile;
 
 public class BaseFactory extends CoreBase {
 	public static String reportFolder = "./Results/";
-	private static String BROWSER;
-	private static String URL;
-	private static boolean SPOOFINGENABLED;
+	private static String browser;
+	
+	private static boolean spoofingEnable;
 	public static ExtentReports extent;
 
 	static WebDriver createInstance() {
 		WebDriver driver = null;
 		LoadConfigFile.getInstance();
-		BROWSER = LoadConfigFile.getValue("DefaultBrowser");
-		URL = LoadConfigFile.getValue("ApplicationUrl");
-		SPOOFINGENABLED = LoadConfigFile.getValue("SpoofingRequired").contains("true");
+		browser = LoadConfigFile.getValue("DefaultBrowser");
+		String url = LoadConfigFile.getValue("ApplicationUrl");
+		spoofingEnable = LoadConfigFile.getValue("SpoofingRequired").contains("true");
 		long implicitlyWait = Integer.parseInt(LoadConfigFile.getValue("ImplicitlyWait"));
 		long maxPageLoadTime = Integer.parseInt(LoadConfigFile.getValue("MaxPageLoadTime"));
 
 		try {
-			if (BROWSER.toLowerCase().contains("firefox")) {
+			if (browser.toLowerCase().contains("firefox")) {
 				WebDriverManager.firefoxdriver().setup();
 				FirefoxProfile profile = new FirefoxProfile();
 				FirefoxOptions ffoptions = new FirefoxOptions();
-				if (SPOOFINGENABLED) {
+				if (spoofingEnable) {
 					profile.setPreference("general.useragent.override", LoadConfigFile.getValue("UserAgent"));
 				}
 				ffoptions.setProfile(profile);
@@ -50,7 +49,7 @@ public class BaseFactory extends CoreBase {
 			} else {
 				WebDriverManager.chromedriver().setup();
 				ChromeOptions choptions = new ChromeOptions();
-				if (SPOOFINGENABLED) {
+				if (spoofingEnable) {
 					choptions.addArguments("--user-agent=" + LoadConfigFile.getValue("UserAgent"));
 				}
 				choptions.addArguments("disable-infobars");
@@ -61,7 +60,7 @@ public class BaseFactory extends CoreBase {
 			driver.manage().timeouts().implicitlyWait(implicitlyWait, TimeUnit.SECONDS);
 			driver.manage().timeouts().pageLoadTimeout(maxPageLoadTime, TimeUnit.SECONDS);
 
-			driver.get(URL);
+			driver.get(url);
 			driver.manage().window().maximize();
 		}
 
@@ -73,7 +72,7 @@ public class BaseFactory extends CoreBase {
 
 	static ExtentTest createTestInstance(String testName) {
 		ExtentTest test = extent.createTest(testName);
-		System.out.println("####MESSAGE::ExtentReport-Test-Instance created successfully for " + testName
+		System.out.println("#### MESSAGE::ExtentReport-Test-Instance created successfully for " + testName
 				+ ". Hashcode:" + test.hashCode());
 		return test;
 	}
@@ -94,10 +93,10 @@ public class BaseFactory extends CoreBase {
 		htmlReporter.config().setTheme(Theme.DARK);
 		extent = new ExtentReports();
 		extent.attachReporter(htmlReporter);
-		System.out.println("####MESSAGE::ExtentReport-Instance created successfully. Hashcode:" + extent.hashCode());
+		System.out.println("#### MESSAGE::ExtentReport-Instance created successfully. Hashcode:" + extent.hashCode());
 
 		extent.setSystemInfo("Author", "EddieBauer-QE Automation Team");
-		extent.setSystemInfo("Browser", "browser");
+		extent.setSystemInfo("Browser", browser);
 		extent.setSystemInfo("OS", System.getProperty("os.name"));
 		extent.setSystemInfo("OS Version", System.getProperty("os.version"));
 		extent.setSystemInfo("OS Architecture", System.getProperty("os.arch"));

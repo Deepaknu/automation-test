@@ -65,10 +65,9 @@ public class LandingPage {
 		List<WebElement> linkProducts = ScriptHelper.getDriver()
 				.findElements(By.xpath("//div[contains(@class,'FocusedCategoryDropdown')]/div/div/div/a"));
 		for (WebElement elem : linkProducts) {
-			hMap.put(counter + "_" + elem.getText(), elem.getAttribute("href"));
+			hMap.put(counter + "_" + elem.getText().toUpperCase(), elem.getAttribute("href"));
 			counter++;
 		}
-		System.out.println(hMap);
 		return hMap;
 	}
 

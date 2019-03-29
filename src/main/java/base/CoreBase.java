@@ -58,7 +58,6 @@ public class CoreBase {
 	}
 
 	public static String capureScreen() {
-
 		String name = UUID.randomUUID().toString();
 		try {
 			File scrFile = ((TakesScreenshot) ScriptHelper.getDriver()).getScreenshotAs(OutputType.FILE);
@@ -68,7 +67,6 @@ public class CoreBase {
 		} catch (IOException e) {
 			System.out.println("The snapshot could not be taken");
 		}
-
 		return name;
 	}
 
@@ -87,33 +85,41 @@ public class CoreBase {
 		ExtentTest tes = ScriptHelper.getTest();
 		MediaEntityModelProvider img = null;
 
-		if (!stepStatus.equalsIgnoreCase(Status.INFO.toString())) {
-			try {
+		try {
+
+			if (stepStatus.equalsIgnoreCase(Status.PASS.toString())) {
+				tes.pass("PASSED: " + reportDescription);
+				if (screenshotForPassStep) {
+					String scrnshtName = capureScreen();
+					scrnshtName = "./screenshots/" + scrnshtName + ".jpg";
+					img = MediaEntityBuilder.createScreenCaptureFromPath(scrnshtName).build();
+					tes.pass("Refer Screenshot: [URL:" + ScriptHelper.getDriver().getCurrentUrl() + "]", img);
+				}
+			} else if (stepStatus.equalsIgnoreCase(Status.FAIL.toString())) {
+				tes.fail(MarkupHelper.createLabel("FAILED: " + reportDescription, ExtentColor.RED));
+				if (screenshotForFailStep) {
+					String scrnshtName = capureScreen();
+					scrnshtName = "./screenshots/" + scrnshtName + ".jpg";
+					img = MediaEntityBuilder.createScreenCaptureFromPath(scrnshtName).build();
+					tes.fail("Refer Screenshot: [URL:" + ScriptHelper.getDriver().getCurrentUrl() + "]", img);
+				}
+			} else if (stepStatus.equalsIgnoreCase(Status.WARNING.toString())) {
+				tes.warning(MarkupHelper.createLabel("WARNING: " + reportDescription, ExtentColor.ORANGE));
 				String scrnshtName = capureScreen();
 				scrnshtName = "./screenshots/" + scrnshtName + ".jpg";
 				img = MediaEntityBuilder.createScreenCaptureFromPath(scrnshtName).build();
-			} catch (IOException e) {
-				System.out.println("Exception occured building Media Entity Builder :: " + e.getMessage());
+				tes.warning("Refer Screenshot: [URL:" + ScriptHelper.getDriver().getCurrentUrl() + "]", img);
+			} else if (stepStatus.equalsIgnoreCase(Status.INFO.toString())) {
+				tes.info("INFO: " + reportDescription);
+				if (screenshotForAllSteps) {
+					String scrnshtName = capureScreen();
+					scrnshtName = "./screenshots/" + scrnshtName + ".jpg";
+					img = MediaEntityBuilder.createScreenCaptureFromPath(scrnshtName).build();
+					tes.info("Refer Screenshot: [URL:" + ScriptHelper.getDriver().getCurrentUrl() + "]", img);
+				}
 			}
-		}
-		if (stepStatus.equalsIgnoreCase(Status.PASS.toString())) {
-			tes.pass("Passed:" + reportDescription);
-			if (screenshotForPassStep) {
-				tes.pass("Refer Screenshot:" + reportDescription, img);
-			}
-		} else if (stepStatus.equalsIgnoreCase(Status.FAIL.toString())) {
-			tes.fail(MarkupHelper.createLabel("Failed:" + reportDescription, ExtentColor.RED));
-			if (screenshotForFailStep) {
-				tes.fail("Refer Screenshot", img);
-			}
-		} else if (stepStatus.equalsIgnoreCase(Status.WARNING.toString())) {
-			tes.warning(MarkupHelper.createLabel("Warning:" + reportDescription, ExtentColor.ORANGE));
-			tes.warning("Refer Screenshot", img);
-		} else if (stepStatus.equalsIgnoreCase(Status.INFO.toString())) {
-			tes.info("Info:" + reportDescription);
-			if (screenshotForAllSteps) {
-				tes.info("Refer Screenshot", img);
-			}
+		} catch (IOException e) {
+			System.out.println("Exception occured building Media Entity Builder :: " + e.getMessage());
 		}
 	}
 }

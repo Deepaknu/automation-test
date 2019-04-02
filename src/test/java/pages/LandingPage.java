@@ -12,19 +12,6 @@ import base.ScriptHelper;
 
 public class LandingPage {
 
-//	@FindBy(css = ".logo")
-//	WebElement linkEBLogo;
-//	@FindBy(xpath = "//div[contains(@class,'FocusedCategoryDropdown')]")
-//	WebElement focusedFlyOut;
-//
-//	@FindBy(css = ".search_title")
-//	WebElement linkSearchIcon;
-//
-//	@FindBy(css = ".sign_in")
-//	WebElement linkSignInIcon;
-//
-//	@FindBy(css = ".bag")
-//	WebElement linkBagIcon;
 	/**
 	 * Method to over on any menu in the header
 	 * 
@@ -56,8 +43,6 @@ public class LandingPage {
 			hMap.put(counter + "_" + elem.getText().toUpperCase(), elem.getAttribute("href"));
 			counter++;
 		}
-		System.out.println(ScriptHelper.getDriver()
-				.findElement(By.xpath("//div[contains(@class,'FocusedCategoryDropdown')]/div")).getText());
 		return hMap;
 	}
 
@@ -125,5 +110,14 @@ public class LandingPage {
 		WebElement loginPageElement = ScriptHelper.getDriver().findElement(By.id("checkoutLoginFormsHolder"));
 		ScriptHelper.explicitWaitVisibilityOfElement(loginPageElement, 30);
 		return loginPageElement.isDisplayed();
+	}
+
+	public String getSubCategoryLinkTexts(String menuName) {
+		hoverToAnyMenu(menuName);
+
+		WebElement linkTexts = ScriptHelper.getDriver()
+				.findElement(By.xpath("//div[contains(@class,'FocusedCategoryDropdown')]/div"));
+
+		return linkTexts.getText();
 	}
 }

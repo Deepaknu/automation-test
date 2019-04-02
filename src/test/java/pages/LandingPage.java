@@ -4,6 +4,7 @@ import java.util.HashMap;
 import java.util.List;
 
 import org.openqa.selenium.By;
+import org.openqa.selenium.Keys;
 import org.openqa.selenium.WebElement;
 import org.testng.Assert;
 
@@ -32,7 +33,8 @@ public class LandingPage {
 	public void hoverToAnyMenu(String menuName) {
 
 		WebElement menu = ScriptHelper.getDriver().findElement(
-				By.xpath("//div[contains(@class,'styles__CategoryRootItem') and contains(.,'" + menuName + "')]"));
+				By.xpath("//a[contains(@class,'styles__CategoryRootItem') and contains(.,'" + menuName + "')]"));
+
 		ScriptHelper.mousehover(menu);
 
 		WebElement focusedFlyOut = ScriptHelper.getDriver()
@@ -54,7 +56,38 @@ public class LandingPage {
 			hMap.put(counter + "_" + elem.getText().toUpperCase(), elem.getAttribute("href"));
 			counter++;
 		}
+		System.out.println(ScriptHelper.getDriver()
+				.findElement(By.xpath("//div[contains(@class,'FocusedCategoryDropdown')]/div")).getText());
 		return hMap;
 	}
 
+	public void clickOnAnySubCategory(String subCat) {
+		WebElement subCatElem = ScriptHelper.getDriver().findElement(By.xpath(
+				"//div[contains(@class,'FocusedCategoryDropdown')]/div/div/div/a/div[contains(.,'" + subCat + "')]"));
+		subCatElem.click();
+		WebElement breadCrumb = ScriptHelper.getDriver().findElement(By.xpath("//ul[contains(@class,'Breadcrumb')]"));
+		ScriptHelper.explicitWaitVisibilityOfElement(breadCrumb, 30);
+	}
+
+	public void clickFirstProduct() {
+		WebElement product = ScriptHelper.getDriver().findElement(By.xpath("//div[contains(@class,'product_tile')]"));
+		product.click();
+
+	}
+
+	public String getProductTitle() {
+		WebElement prodTitle = ScriptHelper.getDriver()
+				.findElement(By.xpath("//div[contains(@class,'StyledHeader')]/div[@class='title']"));
+		ScriptHelper.explicitWaitVisibilityOfElement(prodTitle, 30);
+		prodTitle.click();
+		return prodTitle.getText();
+	}
+
+	public void SearchAnyValue(String searchText) {
+		WebElement searchIcon = ScriptHelper.getDriver().findElement(By.className("icon_container"));
+		searchIcon.click();
+		WebElement searchInputBox = ScriptHelper.getDriver().findElement(By.cssSelector("#search"));
+		searchInputBox.sendKeys(searchText);
+		searchInputBox.sendKeys(Keys.ENTER);
+	}
 }

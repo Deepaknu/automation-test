@@ -23,40 +23,40 @@ import pages.LandingPage;
 public class TestScript01 extends CoreBase {
 	static WebDriver driver;
 
-//	@Test
-//	public void verifyMenMenuLinks() {
-//		verifyAnyMenuLinks("Men");
-//	}
-//
-//	@Test
-//	public void verifyWomenMenuLinks() {
-//		verifyAnyMenuLinks("Women");
-//	}
-//
-//	@Test
-//	public void verifyOuterwearMenuLinks() {
-//		verifyAnyMenuLinks("Outerwear");
-//	}
-//
-//	@Test
-//	public void verifyGearMenuLinks() {
-//		verifyAnyMenuLinks("Gear");
-//	}
-//
-//	@Test
-//	public void verifyHomeMenuLinks() {
-//		verifyAnyMenuLinks("Home");
-//	}
-//
-//	@Test
-//	public void verifyGuideToEBMenuLinks() {
-//		verifyAnyMenuLinks("Guide");
-//	}
-//
-//	@Test
-//	public void verifyClearanceMenuLinks() {
-//		verifyAnyMenuLinks("Clearance");
-//	}
+	@Test
+	public void verifyMenMenuLinks() {
+		verifyAnyMenuLinks("Men");
+	}
+
+	@Test
+	public void verifyWomenMenuLinks() {
+		verifyAnyMenuLinks("Women");
+	}
+
+	@Test
+	public void verifyOuterwearMenuLinks() {
+		verifyAnyMenuLinks("Outerwear");
+	}
+
+	@Test
+	public void verifyGearMenuLinks() {
+		verifyAnyMenuLinks("Gear");
+	}
+
+	@Test
+	public void verifyHomeMenuLinks() {
+		verifyAnyMenuLinks("Home");
+	}
+
+	@Test
+	public void verifyGuideToEBMenuLinks() {
+		verifyAnyMenuLinks("Guide");
+	}
+
+	@Test
+	public void verifyClearanceMenuLinks() {
+		verifyAnyMenuLinks("Clearance");
+	}
 
 	@Test
 	public void verifySearchFlow() {
@@ -81,6 +81,47 @@ public class TestScript01 extends CoreBase {
 			reportVP(FAIL, "Product displayed is NOT same as the expected one after Search");
 		}
 		assertTrue(flag, "Product is displayed same as the expected one after Search");
+	}
+
+	@Test
+	public void verifyCheckOutFlow() {
+		driver = ScriptHelper.getDriver();
+		LandingPage landingPage = new LandingPage();
+		landingPage.hoverToAnyMenu("Men");
+		reportVP(INFO, "Hovering on Menu is completed");
+		landingPage.clickOnAnySubCategory("Boots");
+		reportVP(INFO, "Boots - Sub Category is clicked");
+		landingPage.clickFirstProduct();
+		String productName = landingPage.getProductTitle();
+		reportVP(INFO, "Selected product is: " + productName);
+		landingPage.chooseAnySizeForTheShoe("10.5");
+		reportVP(INFO, "Boots - Size <10.5> is choosed");
+		landingPage.clickOnAddToBag();
+		reportVP(INFO, "Product is added to BAG: " + productName);
+
+		boolean flag = landingPage.verifyAddToBagOverlay(productName);
+		if (flag) {
+			reportVP(PASS, "Product is added to the overlay");
+		} else {
+			reportVP(FAIL, "Product is NOT added to the overlay");
+		}
+
+		landingPage.continueToCheckOut();
+		reportVP(INFO, "Proceeding to Checkout with product: " + productName);
+		flag = landingPage.verifyCheckOutPageContainsTheProduct(productName);
+
+		if (flag) {
+			reportVP(PASS, "The product is available in Cart Page: " + productName);
+		} else {
+			reportVP(FAIL, "The product is NOT available in Cart Page: " + productName);
+		}
+		flag = landingPage.proceedToCheckOut();
+		if (flag) {
+			reportVP(PASS, "PROCEED TO CHECKOUT redirects to LoginPage as expected");
+		} else {
+			reportVP(FAIL, "PROCEED TO CHECKOUT NOT redirected to LoginPage");
+		}
+		assertTrue(flag, "Product is successfully checked out. ");
 	}
 
 	private void verifyAnyMenuLinks(String menu) {

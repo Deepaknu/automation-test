@@ -72,7 +72,6 @@ public class LandingPage {
 	public void clickFirstProduct() {
 		WebElement product = ScriptHelper.getDriver().findElement(By.xpath("//div[contains(@class,'product_tile')]"));
 		product.click();
-
 	}
 
 	public String getProductTitle() {
@@ -89,5 +88,42 @@ public class LandingPage {
 		WebElement searchInputBox = ScriptHelper.getDriver().findElement(By.cssSelector("#search"));
 		searchInputBox.sendKeys(searchText);
 		searchInputBox.sendKeys(Keys.ENTER);
+	}
+
+	public void chooseAnySizeForTheShoe(String size) {
+		WebElement sizeIcon = ScriptHelper.getDriver()
+				.findElement(By.xpath("//span[@class='size_option' and contains(.,'" + size + "')]"));
+		sizeIcon.click();
+	}
+
+	public void clickOnAddToBag() {
+		WebElement addToCartBtn = ScriptHelper.getDriver()
+				.findElement(By.xpath("//button[contains(@class,'add_to_cart')]"));
+		addToCartBtn.click();
+	}
+
+	public boolean verifyAddToBagOverlay(String productName) {
+		WebElement overlay = ScriptHelper.getDriver().findElement(By.cssSelector("#add_to_cart_success"));
+		ScriptHelper.explicitWaitVisibilityOfElement(overlay, 30);
+		return overlay.getText().contains(productName);
+	}
+
+	public void continueToCheckOut() {
+		WebElement checkOutBtn = ScriptHelper.getDriver().findElement(By.xpath("//div[@id='sbCartLinksHolder']/div/a"));
+		checkOutBtn.click();
+	}
+
+	public boolean verifyCheckOutPageContainsTheProduct(String productName) {
+		WebElement cartPage = ScriptHelper.getDriver().findElement(By.cssSelector(".sb-item-container"));
+		ScriptHelper.explicitWaitVisibilityOfElement(cartPage, 30);
+		return cartPage.getText().contains(productName);
+	}
+
+	public boolean proceedToCheckOut() {
+		WebElement checkOutBtn = ScriptHelper.getDriver().findElement(By.id("osCheckoutBtn"));
+		checkOutBtn.click();
+		WebElement loginPageElement = ScriptHelper.getDriver().findElement(By.id("checkoutLoginFormsHolder"));
+		ScriptHelper.explicitWaitVisibilityOfElement(loginPageElement, 30);
+		return loginPageElement.isDisplayed();
 	}
 }

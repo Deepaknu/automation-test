@@ -104,15 +104,14 @@ public class TestScript01 extends CoreBase {
 		try {
 			driver = ScriptHelper.getDriver();
 			LandingPage landingPage = new LandingPage();
-			landingPage.hoverToAnyMenu("Men");
+			landingPage.hoverToAnyMenu("Clearance");
 			reportVP(INFO, "Hovering on Menu is completed");
-			landingPage.clickOnAnySubCategory("Boots");
-			reportVP(INFO, "Boots - Sub Category is clicked");
+			landingPage.clickOnAnySubCategory("Fleece");
+			reportVP(INFO, "Fleece - Sub Category is clicked");
 			landingPage.clickFirstProduct();
 			String productName = landingPage.getProductTitle();
 			reportVP(INFO, "Selected product is: " + productName);
-			landingPage.chooseAnySizeForTheShoe("10.5");
-			reportVP(INFO, "Boots - Size <10.5> is choosed");
+			landingPage.chooseLSizeForFleece();
 			landingPage.clickOnAddToBag();
 			reportVP(INFO, "Product is added to BAG: " + productName);
 
@@ -165,31 +164,31 @@ public class TestScript01 extends CoreBase {
 		String expectedLinks = null;
 		switch (menuName) {
 		case "Men":
-			expectedLinkCount = 42;
+			expectedLinkCount = 43;
 			expectedLinks = "FEATUREDViewAllNewArrivalsAdventureTravelRainwearSpringSaleClearanceACTIVITYHikingTravelFishingFieldTrainingJACKETSVESTSParkasCasualInsulatedHardShellsSoftShellsRainwear3in1VestsBOTTOMSPantsJeansShortsBaselayersTOPSShirtsShirtJacketsTShirtsSweatersSweatshirtsHoodiesBaselayersFLEECETechnicalCasualFOOTWEARBootsHikingCasualSandalsSlippersSocksACCESSORIESBeltsGlovesHatsScarvesSunglassesSocks";
 			break;
 		case "Women":
-			expectedLinkCount = 47;
+			expectedLinkCount = 48;
 			expectedLinks = "FEATUREDViewAllNewArrivalsAdventureTravelRainwearSpringSaleClearanceACTIVITYHikingTravelFishingFieldTrainingJACKETSVESTSParkasCasualInsulatedHardShellsSoftShellsRainwear3in1VestsBOTTOMSPantsJeansTightsCaprisShortsSkirtsSkortsBaselayersTOPSShirtsTShirtsTankTopsSweatersSweatshirtsHoodiesSleepDressesBaselayersFLEECETechnicalCasualFOOTWEARBootsHikingCasualSandalsSlippersSocksACCESSORIESBeltsGlovesHatsScarvesSunglassesSocks";
 			break;
 		case "Outerwear":
-			expectedLinkCount = 20;
+			expectedLinkCount = 30;
 			expectedLinks = "MENParkasCasualInsulatedHardShellsSoftShellsRainwear3in1FleeceVestsWOMENParkasCasualInsulatedHardShellsSoftShellsRainwear3in1FleeceVestsBOYSJacketsVestsGIRLSJacketsVests";
 			break;
 		case "Gear":
-			expectedLinkCount = 10;
+			expectedLinkCount = 20;
 			expectedLinks = "GEARBackpacksDuffelsLuggageMessengerLaptopBagsTravelAccessoriesTentsSleepingBagsStovesCookwareHydrationLightingToteBags";
 			break;
 		case "Home":
-			expectedLinkCount = 8;
+			expectedLinkCount = 13;
 			expectedLinks = "HOMEBlanketsThrowsSheetsPillowcasesDuvetCoversShamsComfortersPillowsMattressPadsOutdoorFurnitureHardwoodFlooring";
 			break;
 		case "Guide":
-			expectedLinkCount = 30;
+			expectedLinkCount = 10;
 			expectedLinks = "FEATUREDAdventureTravelRainwearACTIVITYHikingTravelFishingFieldTrainingSnowAlpineABOUTUSOurFounderGuidesAthletesExpeditionsResponsibleSourcingAwardWinnersCareersPARTNERSHIPSBigCityMountaineersAmericanHikingSocietyTheHeroesProjectAmericanForests";
 			break;
 		case "Clearance":
-			expectedLinkCount = 17;
+			expectedLinkCount = 14;
 			expectedLinks = "MENJacketsVestsBottomsTopsFleeceFootwearAccessoriesWOMENJacketsVestsBottomsTopsFleeceFootwearAccessoriesGEARBackpacksDuffelsLuggageMessengerLaptopBagsTravelAccessoriesTentsSleepingBagsStovesCookwareHydrationLightingToteBagsHOMEBlanketsThrowsSheetsPillowcasesDuvetCoversShamsComfortersPillowsMattressPadsOutdoorFurnitureHardwoodFlooring";
 
 			break;
@@ -241,25 +240,25 @@ public class TestScript01 extends CoreBase {
 		switch (menuName) {
 		case "Men":
 
-			expectedLinks = "FEATUREDViewAllNewArrivalsAdventureTravelRainwearSpringSaleClearanceACTIVITYHikingTravelFishingFieldTrainingJACKETSVESTSParkasCasualInsulatedHardShellsSoftShellsRainwear3in1VestsBOTTOMSPantsJeansShortsBaselayersTOPSShirtsShirtJacketsTShirtsSweatersSweatshirtsHoodiesBaselayersFLEECETechnicalCasualFOOTWEARBootsHikingCasualSandalsSlippersSocksACCESSORIESBeltsGlovesHatsScarvesSunglassesSocks";
+			expectedLinks = "FEATUREDViewAllNewArrivalsAdventureTravelRainwearSpringSaleClearanceACTIVITYHikingTravelFishingFieldTrainingMountainSportsJACKETSVESTSParkasCasualInsulatedHardShellsSoftShellsRainwear3in1VestsBOTTOMSPantsJeansShortsBaselayersTOPSShirtsShirtJacketsTShirtsSweatersSweatshirtsHoodiesBaselayersFLEECETechnicalCasualFOOTWEARBootsHikingCasualSandalsSlippersSocksACCESSORIESBeltsGlovesHatsScarvesSunglassesSocks";
 			break;
 		case "Women":
-			expectedLinks = "FEATUREDViewAllNewArrivalsAdventureTravelRainwearSpringSaleClearanceACTIVITYHikingTravelFishingFieldTrainingJACKETSVESTSParkasCasualInsulatedHardShellsSoftShellsRainwear3in1VestsBOTTOMSPantsJeansTightsCaprisShortsSkirtsSkortsBaselayersTOPSShirtsTShirtsTankTopsSweatersSweatshirtsHoodiesSleepDressesBaselayersFLEECETechnicalCasualFOOTWEARBootsHikingCasualSandalsSlippersSocksACCESSORIESBeltsGlovesHatsScarvesSunglassesSocks";
+			expectedLinks = "FEATUREDViewAllNewArrivalsAdventureTravelRainwearSpringSaleClearanceACTIVITYHikingTravelFishingFieldTrainingMountainSportsJACKETSVESTSParkasCasualInsulatedHardShellsSoftShellsRainwear3in1VestsBOTTOMSPantsJeansTightsCaprisShortsSkirtsSkortsBaselayersTOPSShirtsTShirtsTankTopsSweatersSweatshirtsHoodiesSleepDressesBaselayersFLEECETechnicalCasualFOOTWEARBootsHikingCasualSandalsSlippersSocksACCESSORIESBeltsGlovesHatsScarvesSunglassesSocks";
 			break;
 		case "Outerwear":
-			expectedLinks = "MENParkasCasualInsulatedHardShellsSoftShellsRainwear3in1FleeceVestsWOMENParkasCasualInsulatedHardShellsSoftShellsRainwear3in1FleeceVestsBOYSJacketsVestsGIRLSJacketsVests";
+			expectedLinks = "FEATUREDViewAllNewArrivalsAdventureTravelRainwearSpringSaleClearanceACTIVITYHikingTravelMountainSportsTrainingMENParkasCasualInsulatedHardShellsSoftShellsRainwear3in1FleeceVestsWOMENParkasCasualInsulatedHardShellsSoftShellsRainwear3in1FleeceVestsBOYSJacketsVestsGIRLSJacketsVests";
 			break;
 		case "Gear":
-			expectedLinks = "GEARBackpacksDuffelsLuggageMessengerLaptopBagsTravelAccessoriesTentsSleepingBagsStovesCookwareHydrationLightingToteBags";
+			expectedLinks = "FEATUREDViewAllNewArrivalsAdventureTravelSpringSaleClearanceACTIVITYHikingTravelMountainSportsTrainingFishingFieldGEARBackpacksDuffelsLuggageMessengerLaptopBagsTravelAccessoriesTentsSleepingBagsStovesCookwareHydrationLightingToteBags";
 			break;
 		case "Home":
-			expectedLinks = "HOMEBlanketsThrowsSheetsPillowcasesDuvetCoversShamsComfortersPillowsMattressPadsOutdoorFurnitureHardwoodFlooring";
+			expectedLinks = "FEATUREDViewAllNewArrivalsAdventureTravelSpringSaleClearanceHOMEBlanketsThrowsSheetsPillowcasesDuvetCoversShamsComfortersPillowsMattressPadsOutdoorFurnitureHardwoodFlooring";
 			break;
 		case "Guide":
-			expectedLinks = "FEATUREDAdventureTravelRainwearACTIVITYHikingTravelFishingFieldTrainingSnowAlpineABOUTUSOurFounderGuidesAthletesExpeditionsResponsibleSourcingAwardWinnersCareersPARTNERSHIPSBigCityMountaineersAmericanHikingSocietyTheHeroesProjectAmericanForests";
+			expectedLinks = "ABOUTUSOurFounderGuidesAthletesExpeditionsResponsibleSourcingAwardWinnersCareersPARTNERSHIPSBigCityMountaineersAmericanHikingSocietyTheHeroesProjectAmericanForests";
 			break;
 		case "Clearance":
-			expectedLinks = "MENJacketsVestsBottomsTopsFleeceFootwearAccessoriesWOMENJacketsVestsBottomsTopsFleeceFootwearAccessoriesGEARBackpacksDuffelsLuggageMessengerLaptopBagsTravelAccessoriesTentsSleepingBagsStovesCookwareHydrationLightingToteBagsHOMEBlanketsThrowsSheetsPillowcasesDuvetCoversShamsComfortersPillowsMattressPadsOutdoorFurnitureHardwoodFlooring";
+			expectedLinks = "MENJacketsVestsBottomsTopsFleeceFootwearAccessoriesWOMENAmericanHikingSocietyJacketsVestsBottomsTopsFleeceFootwearAccessoriesKIDSBoysGirls";
 			break;
 		}
 

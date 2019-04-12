@@ -20,7 +20,7 @@ public class LandingPage {
 	public void hoverToAnyMenu(String menuName) {
 
 		WebElement menu = ScriptHelper.getDriver().findElement(
-				By.xpath("//a[contains(@class,'styles__CategoryRootItem') and contains(.,'" + menuName + "')]"));
+				By.xpath("//*[contains(@class,'styles__CategoryRootItem') and contains(.,'" + menuName + "')]"));
 
 		ScriptHelper.mousehover(menu);
 
@@ -50,8 +50,8 @@ public class LandingPage {
 		WebElement subCatElem = ScriptHelper.getDriver().findElement(By.xpath(
 				"//div[contains(@class,'FocusedCategoryDropdown')]/div/div/div/a/div[contains(.,'" + subCat + "')]"));
 		subCatElem.click();
-		WebElement breadCrumb = ScriptHelper.getDriver().findElement(By.xpath("//ul[contains(@class,'Breadcrumb')]"));
-		ScriptHelper.explicitWaitVisibilityOfElement(breadCrumb, 30);
+//		WebElement breadCrumb = ScriptHelper.getDriver().findElement(By.xpath("//ul[contains(@class,'Breadcrumb')]"));
+//		ScriptHelper.explicitWaitVisibilityOfElement(breadCrumb, 30);
 	}
 
 	public void clickFirstProduct() {
@@ -80,7 +80,11 @@ public class LandingPage {
 				.findElement(By.xpath("//span[@class='size_option' and contains(.,'" + size + "')]"));
 		sizeIcon.click();
 	}
-
+	public void chooseLSizeForFleece( ) {
+		WebElement sizeIcon = ScriptHelper.getDriver()
+				.findElement(By.xpath("//*[@aria-labelledby='product-sizes']/span[contains(.,'L')]"));
+		sizeIcon.click();
+	}
 	public void clickOnAddToBag() {
 		WebElement addToCartBtn = ScriptHelper.getDriver()
 				.findElement(By.xpath("//button[contains(@class,'add_to_cart')]"));

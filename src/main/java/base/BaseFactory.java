@@ -5,12 +5,14 @@ import java.net.InetAddress;
 import java.util.Date;
 import java.util.concurrent.TimeUnit;
 
+import org.openqa.selenium.Proxy;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.chrome.ChromeDriver;
 import org.openqa.selenium.chrome.ChromeOptions;
 import org.openqa.selenium.firefox.FirefoxDriver;
 import org.openqa.selenium.firefox.FirefoxOptions;
 import org.openqa.selenium.firefox.FirefoxProfile;
+import org.openqa.selenium.remote.CapabilityType;
 
 import com.aventstack.extentreports.ExtentReports;
 import com.aventstack.extentreports.ExtentTest;
@@ -18,21 +20,27 @@ import com.aventstack.extentreports.reporter.ExtentHtmlReporter;
 import com.aventstack.extentreports.reporter.configuration.Theme;
 
 import io.github.bonigarcia.wdm.WebDriverManager;
+import net.lightbody.bmp.BrowserMobProxy;
+import net.lightbody.bmp.BrowserMobProxyServer;
+import net.lightbody.bmp.client.ClientUtil;
 import util.LoadConfigFile;
 
 public class BaseFactory extends CoreBase {
 	public static String reportFolder = "./Results/";
 	private static String browser;
-	
-	private static boolean spoofingEnable;
+
+	private static boolean userAgentEnable;
+	private static boolean headerEnable;
 	public static ExtentReports extent;
 
 	static WebDriver createInstance() {
+
 		WebDriver driver = null;
 		LoadConfigFile.getInstance();
 		browser = LoadConfigFile.getValue("DefaultBrowser");
 		String url = LoadConfigFile.getValue("ApplicationUrl");
-		spoofingEnable = LoadConfigFile.getValue("SpoofingRequired").contains("true");
+		userAgentEnable = LoadConfigFile.getValue("UserAgentRequired").contains("true");
+		headerEnable = LoadConfigFile.getValue("HeaderRequired").contains("true");
 		long implicitlyWait = Integer.parseInt(LoadConfigFile.getValue("ImplicitlyWait"));
 		long maxPageLoadTime = Integer.parseInt(LoadConfigFile.getValue("MaxPageLoadTime"));
 
@@ -41,21 +49,31 @@ public class BaseFactory extends CoreBase {
 				WebDriverManager.firefoxdriver().setup();
 				FirefoxProfile profile = new FirefoxProfile();
 				FirefoxOptions ffoptions = new FirefoxOptions();
-				if (spoofingEnable) {
+				if (userAgentEnable) {
 					profile.setPreference("general.useragent.override", LoadConfigFile.getValue("UserAgent"));
 				}
 				ffoptions.setProfile(profile);
 				driver = new FirefoxDriver(ffoptions);
 			} else {
-				WebDriverManager.chromedriver().setup();
-				ChromeOptions choptions = new ChromeOptions();
-				if (spoofingEnable) {
-					choptions.addArguments("--user-agent=" + LoadConfigFile.getValue("UserAgent"));
+				ChromeOptions options = new ChromeOptions();
+				if (headerEnable) {
+					BrowserMobProxy proxy = new BrowserMobProxyServer();
+					proxy.setTrustAllServers(true);
+					proxy.start();
+					proxy.addHeader("EddieBauerUserAgent", "Eddiebauer/testenvironment/1.0");
+					Proxy seleniumProxy = ClientUtil.createSeleniumProxy(proxy);
+					options.setCapability(CapabilityType.PROXY, seleniumProxy);
 				}
-				choptions.addArguments("disable-infobars");
-				choptions.addArguments("--disable-extensions");
-				choptions.addArguments("--start-maximized");
-				driver = new ChromeDriver(choptions);
+
+				WebDriverManager.chromedriver().setup();
+
+				if (userAgentEnable) {
+					options.addArguments("--user-agent=" + LoadConfigFile.getValue("UserAgent"));
+				}
+				options.addArguments("disable-infobars");
+				options.addArguments("--disable-extensions");
+				options.addArguments("--start-maximized");
+				driver = new ChromeDriver(options);
 			}
 
 			driver.manage().timeouts().implicitlyWait(implicitlyWait, TimeUnit.SECONDS);

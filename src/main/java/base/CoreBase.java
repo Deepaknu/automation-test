@@ -96,7 +96,7 @@ public class CoreBase {
 					tes.pass("Refer Screenshot: [URL:" + ScriptHelper.getDriver().getCurrentUrl() + "]", img);
 				}
 			} else if (stepStatus.equalsIgnoreCase(Status.FAIL.toString())) {
-				tes.fail(MarkupHelper.createLabel("FAILED: " + reportDescription, ExtentColor.RED));
+				tes.fail(MarkupHelper.createLabel("FAILED: " + reportDescription + " URL ["+ScriptHelper.getDriver().getCurrentUrl() +"]", ExtentColor.RED));
 				if (screenshotForFailStep) {
 					String scrnshtName = capureScreen();
 					scrnshtName = "./screenshots/" + scrnshtName + ".jpg";

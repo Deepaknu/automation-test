@@ -147,9 +147,9 @@ public class TestScript01 extends CoreBase {
 	private void verifyAnyMenuLinks(String menu) {
 		try {
 			driver = ScriptHelper.getDriver();
-            List<WebElement> catLink = driver.findElements(By.xpath("//*[contains(@class,'styles__CategoriesContainer')]");
+            List<WebElement> catLink = driver.findElements(By.xpath("//*[contains(@class,'styles__CategoriesContainer')]"));
             for ( int i = 0;i<catLink.size();i++ ){
-                clickonHoverCat(catLink);
+                clickonHoverCat(catLink.get(i));
             }
 
 			LandingPage landingPage = new LandingPage();

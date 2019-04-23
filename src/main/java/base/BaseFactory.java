@@ -3,8 +3,11 @@ package base;
 import java.io.File;
 import java.net.InetAddress;
 import java.util.Date;
+import java.util.HashMap;
 import java.util.concurrent.TimeUnit;
 
+import org.openqa.selenium.Alert;
+import org.openqa.selenium.By;
 import org.openqa.selenium.Proxy;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.chrome.ChromeDriver;
@@ -25,13 +28,17 @@ import net.lightbody.bmp.BrowserMobProxyServer;
 import net.lightbody.bmp.client.ClientUtil;
 import util.LoadConfigFile;
 
+import static base.ScriptHelper.createReportFile;
+import static base.ScriptHelper.getConvertedDate;
+
 public class BaseFactory extends CoreBase {
-	public static String reportFolder = "./Results/";
+	public static String reportFolder = "./results/";
 	private static String browser;
 
 	private static boolean userAgentEnable;
 	private static boolean headerEnable;
 	public static ExtentReports extent;
+	public static HashMap<String,String> catHash = new HashMap<>();
 
 	static WebDriver createInstance() {
 
@@ -81,6 +88,12 @@ public class BaseFactory extends CoreBase {
 
 			driver.get(url);
 			driver.manage().window().maximize();
+			driver.manage().timeouts().implicitlyWait(implicitlyWait,TimeUnit.SECONDS);
+			try{
+				driver.findElement(By.xpath("//div[@class='tophat-close-icon']")).click();
+			}catch (Exception e ){
+
+			}
 		}
 
 		catch (Exception e) {
@@ -97,19 +110,20 @@ public class BaseFactory extends CoreBase {
 	}
 
 	static ExtentReports createExtentReportInstance() {
-		Date date = new Date();
 		StringBuilder FILE_NAME = new StringBuilder();
-		FILE_NAME.append(date.toString().replace(":", "_").replace(" ", "_"));
+		String dt = "EBSmokeTestReport_"+ getConvertedDate();
+		FILE_NAME.append(dt.replace(":", "_").replace(" ", "_"));
 		reportFolder = reportFolder + FILE_NAME + "/";
 		FILE_NAME.append(".html").toString();
 		File dirFile = new File(reportFolder + "screenshots");
 		dirFile.mkdirs();
 		setReportPath(reportFolder);
+		createReportFile(FILE_NAME);
 		ExtentHtmlReporter htmlReporter = new ExtentHtmlReporter(reportFolder + FILE_NAME);
 		htmlReporter.config().setDocumentTitle("EddieBauer - Automation Execution");
 		htmlReporter.config().setReportName("Smoke Test Suite - Results");
 		// htmlReporter.config().enableTimeline(true);
-		htmlReporter.config().setTheme(Theme.DARK);
+		htmlReporter.config().setTheme(Theme.STANDARD);
 		extent = new ExtentReports();
 		extent.attachReporter(htmlReporter);
 		System.out.println("#### MESSAGE::ExtentReport-Instance created successfully. Hashcode:" + extent.hashCode());
@@ -130,7 +144,9 @@ public class BaseFactory extends CoreBase {
 		return extent;
 	}
 
-	static void setReportPath(String path) {
+
+
+    static void setReportPath(String path) {
 		reportFolder = path;
 	}
 

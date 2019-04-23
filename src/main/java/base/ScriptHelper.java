@@ -9,6 +9,16 @@ import org.openqa.selenium.support.ui.WebDriverWait;
 
 import com.aventstack.extentreports.ExtentTest;
 
+import java.io.File;
+import java.io.IOException;
+import java.text.DateFormat;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.util.Calendar;
+import java.util.Date;
+
+import static base.BaseFactory.reportFolder;
+
 public class ScriptHelper {
 	private static ThreadLocal<WebDriver> webDriver = new ThreadLocal<WebDriver>();
 	private static ThreadLocal<ExtentTest> eTest = new ThreadLocal<ExtentTest>();
@@ -46,5 +56,33 @@ public class ScriptHelper {
 			seekingState = (Boolean) js.executeScript("return document.readyState").equals("complete");
 		}
 		return seekingState;
+	}
+
+	public static String getConvertedDate(){
+		Date today = Calendar.getInstance().getTime();
+		DateFormat df = new SimpleDateFormat("yyyyMMddHHmmss");
+		String datenow = "";
+		datenow = df.format(today);
+		return datenow;
+	}
+
+	public static void createReportFile(StringBuilder filename){
+
+		// Check whether report folder exists.
+		File fnFolder = new File(reportFolder);
+
+		if (! fnFolder.exists()){
+			fnFolder.mkdirs();
+		}
+
+		File fn = new File(reportFolder+ filename);
+		if(! fn.exists()){
+			File fname = new File(fn.toString());
+			try {
+				fname.createNewFile();
+			} catch (IOException e) {
+				e.printStackTrace();
+			}
+		}
 	}
 }

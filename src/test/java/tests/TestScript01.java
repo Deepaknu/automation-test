@@ -1,5 +1,6 @@
 package tests;
 
+import static base.BaseFactory.catHash;
 import static org.testng.Assert.assertTrue;
 
 import java.util.ArrayList;
@@ -9,6 +10,7 @@ import java.util.Map;
 
 import org.openqa.selenium.By;
 import org.openqa.selenium.WebDriver;
+import org.openqa.selenium.WebElement;
 import org.openqa.selenium.support.ui.ExpectedConditions;
 import org.openqa.selenium.support.ui.WebDriverWait;
 import org.testng.annotations.Listeners;
@@ -32,7 +34,6 @@ public class TestScript01 extends CoreBase {
 		this.verifySubCategoryMenuTexts("Home");
 		this.verifySubCategoryMenuTexts("Guide");
 		this.verifySubCategoryMenuTexts("Clearance");
-
 	}
 
 	@Test
@@ -146,7 +147,13 @@ public class TestScript01 extends CoreBase {
 	private void verifyAnyMenuLinks(String menu) {
 		try {
 			driver = ScriptHelper.getDriver();
+            List<WebElement> catLink = driver.findElements(By.xpath("//*[contains(@class,'styles__CategoriesContainer')]");
+            for ( int i = 0;i<catLink.size();i++ ){
+                clickonHoverCat(catLink);
+            }
+
 			LandingPage landingPage = new LandingPage();
+
 			landingPage.hoverToAnyMenu(menu);
 			reportVP(INFO, "Hovering on " + menu + " Menu is completed");
 			verifySubCategoryMenu(landingPage, menu);
@@ -155,7 +162,13 @@ public class TestScript01 extends CoreBase {
 		}
 	}
 
-	@SuppressWarnings("rawtypes")
+    private void clickonHoverCat(WebElement catLink) {
+        //catHash
+        //driver.
+
+    }
+
+    @SuppressWarnings("rawtypes")
 	private void verifySubCategoryMenu(LandingPage landingPage, String menuName) {
 		HashMap<String, String> links = new HashMap<>();
 		links = landingPage.getSubCategoryLinks();

@@ -57,7 +57,7 @@ public class CoreBase {
 		}
 	}
 
-	public static String capureScreen() {
+	public static String captureScreen() {
 		String name = UUID.randomUUID().toString();
 		try {
 			File scrFile = ((TakesScreenshot) ScriptHelper.getDriver()).getScreenshotAs(OutputType.FILE);
@@ -90,7 +90,7 @@ public class CoreBase {
 			if (stepStatus.equalsIgnoreCase(Status.PASS.toString())) {
 				tes.pass("PASSED: " + reportDescription);
 				if (screenshotForPassStep) {
-					String scrnshtName = capureScreen();
+					String scrnshtName = captureScreen();
 					scrnshtName = "./screenshots/" + scrnshtName + ".jpg";
 					img = MediaEntityBuilder.createScreenCaptureFromPath(scrnshtName).build();
 					tes.pass("Refer Screenshot: [URL:" + ScriptHelper.getDriver().getCurrentUrl() + "]", img);
@@ -98,21 +98,21 @@ public class CoreBase {
 			} else if (stepStatus.equalsIgnoreCase(Status.FAIL.toString())) {
 				tes.fail(MarkupHelper.createLabel("FAILED: " + reportDescription + " URL ["+ScriptHelper.getDriver().getCurrentUrl() +"]", ExtentColor.RED));
 				if (screenshotForFailStep) {
-					String scrnshtName = capureScreen();
+					String scrnshtName = captureScreen();
 					scrnshtName = "./screenshots/" + scrnshtName + ".jpg";
 					img = MediaEntityBuilder.createScreenCaptureFromPath(scrnshtName).build();
 					tes.fail("Refer Screenshot: [URL:" + ScriptHelper.getDriver().getCurrentUrl() + "]", img);
 				}
 			} else if (stepStatus.equalsIgnoreCase(Status.WARNING.toString())) {
 				tes.warning(MarkupHelper.createLabel("WARNING: " + reportDescription, ExtentColor.ORANGE));
-				String scrnshtName = capureScreen();
+				String scrnshtName = captureScreen();
 				scrnshtName = "./screenshots/" + scrnshtName + ".jpg";
 				img = MediaEntityBuilder.createScreenCaptureFromPath(scrnshtName).build();
 				tes.warning("Refer Screenshot: [URL:" + ScriptHelper.getDriver().getCurrentUrl() + "]", img);
 			} else if (stepStatus.equalsIgnoreCase(Status.INFO.toString())) {
 				tes.info("INFO: " + reportDescription);
 				if (screenshotForAllSteps) {
-					String scrnshtName = capureScreen();
+					String scrnshtName = captureScreen();
 					scrnshtName = "./screenshots/" + scrnshtName + ".jpg";
 					img = MediaEntityBuilder.createScreenCaptureFromPath(scrnshtName).build();
 					tes.info("Refer Screenshot: [URL:" + ScriptHelper.getDriver().getCurrentUrl() + "]", img);
@@ -121,5 +121,6 @@ public class CoreBase {
 		} catch (IOException e) {
 			System.out.println("Exception occured building Media Entity Builder :: " + e.getMessage());
 		}
+		extent.flush();
 	}
 }

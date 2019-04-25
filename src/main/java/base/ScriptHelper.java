@@ -1,23 +1,31 @@
 package base;
 
-import org.openqa.selenium.JavascriptExecutor;
-import org.openqa.selenium.WebDriver;
-import org.openqa.selenium.WebElement;
+import com.beust.jcommander.internal.Nullable;
+import com.google.common.base.Predicate;
+import org.openqa.selenium.*;
 import org.openqa.selenium.interactions.Actions;
 import org.openqa.selenium.support.ui.ExpectedConditions;
+import org.openqa.selenium.support.ui.FluentWait;
+import org.openqa.selenium.support.ui.Wait;
 import org.openqa.selenium.support.ui.WebDriverWait;
 
 import com.aventstack.extentreports.ExtentTest;
+import util.commonfunctions;
 
 import java.io.File;
 import java.io.IOException;
 import java.text.DateFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
+import java.util.List;
+import java.util.concurrent.TimeUnit;
 
+import static base.BaseFactory.catHash;
 import static base.BaseFactory.reportFolder;
+import static base.CoreBase.*;
 
 public class ScriptHelper {
 	private static ThreadLocal<WebDriver> webDriver = new ThreadLocal<WebDriver>();
@@ -40,8 +48,11 @@ public class ScriptHelper {
 	}
 
 	public static void mousehover(WebElement element) {
-		Actions actions = new Actions(getDriver());
-		actions.moveToElement(element).build().perform();
+
+		WebDriver wb = getDriver();
+		waitForPageLoad(wb);
+		Actions actions = new Actions(wb);
+        actions.moveToElement(element).build().perform();;
 	}
 
 	public static void explicitWaitVisibilityOfElement(WebElement element, int time) {
@@ -84,5 +95,91 @@ public class ScriptHelper {
 				e.printStackTrace();
 			}
 		}
+	}
+
+	public static void navigateToURL() {
+
+		catHash.forEach((key, value) -> {
+			String pageName = key;
+			String pageURL = value;
+			ScriptHelper.getDriver().get(value);
+			checkAnyPageContainsError(key);
+		});
+
+	}
+
+	public static void checkAnyPageContainsError(String sectionName) {
+		WebDriver driver = ScriptHelper.getDriver();
+		StringBuilder pageSrc = null;
+		WebDriverWait wait = new WebDriverWait(driver, 30);
+		wait.until(ExpectedConditions.refreshed(ExpectedConditions.visibilityOfElementLocated(By.xpath("//body"))));
+		pageSrc = new StringBuilder(driver.findElement(By.tagName("body")).getText().replaceAll("[^a-zA-Z0-9]", ""));
+		String ErrorMessage = "";
+
+		List<String> errMsgs = new ArrayList<>();
+		errMsgs.add("nomatchesfound");
+		errMsgs.add("unknownerror");
+		errMsgs.add("networkerror");
+
+		boolean flag = true;
+		for (String errMsg : errMsgs) {
+			if (pageSrc.toString().toLowerCase().contains(errMsg)) {
+				ErrorMessage = errMsg;
+				flag = false;
+			}
+		}
+		if (flag) {
+			reportVP(PASS, sectionName + " - Page loaded correctly as expected.");// <br>[URL: " +
+		} else {
+			reportVP(FAIL, sectionName + " - Page loaded with ERROR MESSAGE. Error Message type is [ "+ErrorMessage+" ]);// <br> " +
+							"[ URL: " + driver.getCurrentUrl()  + "]");
+		}
+	}
+	public static void waitForPageLoad(WebDriver wdriver) {
+
+		// WebDriverWait wait = new WebDriverWait(wdriver, 5, 1000);
+		Wait<WebDriver> wait = new FluentWait<>(wdriver).withTimeout(15, TimeUnit.SECONDS).pollingEvery(5, TimeUnit.SECONDS).ignoring(NoSuchElementException.class);
+		try {
+			//wait.until(AdditionalConditions.angularHasFinishedProcessing());
+		} catch (Exception e) {
+			try {
+				Thread.sleep(1000);
+			} catch (InterruptedException e1) {
+				// TODO Auto-generated catch block
+				e1.printStackTrace();
+			}
+		}
+
+
+		try {
+			wait.until(commonfunctions.pageLoadFinished());
+		} catch (Exception ee) {
+			try {
+				Thread.sleep(1000);
+			} catch (InterruptedException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+		}
+
+
+		try {
+			wait.until(commonfunctions.isJqueryCallDone());
+		} catch (Exception ee) {
+			try {
+				Thread.sleep(1000);
+			} catch (InterruptedException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+		}
+
+		try {
+			Thread.sleep(1000);
+		} catch (InterruptedException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+
 	}
 }

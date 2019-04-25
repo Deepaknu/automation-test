@@ -29,6 +29,10 @@ public class CoreBase {
 	public static final String FAIL = "FAIL";
 	public static final String WARNING = "WARNING";
 	public static final String INFO = "INFO";
+	public static String reportScreenshot="" ;
+	public static boolean screenshotForPassStep = false;
+	public static boolean screenshotForFailStep = false;
+	public static boolean screenshotForAllSteps = false;
 
 	@BeforeSuite
 	public void beforeSuite() {
@@ -58,7 +62,7 @@ public class CoreBase {
 	}
 
 	public static String captureScreen() {
-		String name = UUID.randomUUID().toString();
+		String name = "failed_"+ UUID.randomUUID().toString();
 		try {
 			File scrFile = ((TakesScreenshot) ScriptHelper.getDriver()).getScreenshotAs(OutputType.FILE);
 			FileUtils.copyFile(scrFile, new File(BaseFactory.reportFolder + "screenshots/" + name + ".jpg"));
@@ -72,14 +76,18 @@ public class CoreBase {
 
 	public static void reportVP(String stepStatus, String reportDescription) {
 
-		LoadConfigFile.getInstance();
-		boolean screenshotForPassStep = LoadConfigFile.getValue("TakeScreenshotForPassedStep").contains("true");
-		boolean screenshotForFailStep = LoadConfigFile.getValue("TakeScreenshotForFailedStep").contains("true");
-		boolean screenshotForAllSteps = LoadConfigFile.getValue("TakeScreenshotForAllSteps").contains("true");
+		if(reportScreenshot.equalsIgnoreCase("") ) {
 
-		if (screenshotForAllSteps) {
-			screenshotForPassStep = true;
-			screenshotForFailStep = true;
+			LoadConfigFile.getInstance();
+			screenshotForPassStep = LoadConfigFile.getValue("TakeScreenshotForPassedStep").contains("true");
+			screenshotForFailStep = LoadConfigFile.getValue("TakeScreenshotForFailedStep").contains("true");
+			screenshotForAllSteps = LoadConfigFile.getValue("TakeScreenshotForAllSteps").contains("true");
+
+			if (screenshotForAllSteps) {
+				screenshotForPassStep = true;
+				screenshotForFailStep = true;
+			}
+			reportScreenshot = "true";
 		}
 
 		ExtentTest tes = ScriptHelper.getTest();
@@ -89,20 +97,22 @@ public class CoreBase {
 
 			if (stepStatus.equalsIgnoreCase(Status.PASS.toString())) {
 				tes.pass("PASSED: " + reportDescription);
+                System.out.println("PASS: " + reportDescription);
 				if (screenshotForPassStep) {
 					String scrnshtName = captureScreen();
 					scrnshtName = "./screenshots/" + scrnshtName + ".jpg";
 					img = MediaEntityBuilder.createScreenCaptureFromPath(scrnshtName).build();
-					tes.pass("Refer Screenshot: [URL:" + ScriptHelper.getDriver().getCurrentUrl() + "]", img);
+					tes.pass("Refer Screenshot for URL [" + ScriptHelper.getDriver().getCurrentUrl() + "]", img);
 				}
 			} else if (stepStatus.equalsIgnoreCase(Status.FAIL.toString())) {
 				tes.fail(MarkupHelper.createLabel("FAILED: " + reportDescription + " URL ["+ScriptHelper.getDriver().getCurrentUrl() +"]", ExtentColor.RED));
-				if (screenshotForFailStep) {
+                System.out.println("FAIL: " + reportDescription + " , The URL is [ " +ScriptHelper.getDriver().getCurrentUrl()+" ]" );
+				/*if (screenshotForFailStep) {*/
 					String scrnshtName = captureScreen();
 					scrnshtName = "./screenshots/" + scrnshtName + ".jpg";
 					img = MediaEntityBuilder.createScreenCaptureFromPath(scrnshtName).build();
 					tes.fail("Refer Screenshot: [URL:" + ScriptHelper.getDriver().getCurrentUrl() + "]", img);
-				}
+				//}
 			} else if (stepStatus.equalsIgnoreCase(Status.WARNING.toString())) {
 				tes.warning(MarkupHelper.createLabel("WARNING: " + reportDescription, ExtentColor.ORANGE));
 				String scrnshtName = captureScreen();
@@ -111,6 +121,7 @@ public class CoreBase {
 				tes.warning("Refer Screenshot: [URL:" + ScriptHelper.getDriver().getCurrentUrl() + "]", img);
 			} else if (stepStatus.equalsIgnoreCase(Status.INFO.toString())) {
 				tes.info("INFO: " + reportDescription);
+                System.out.println("INFO: " + reportDescription );
 				if (screenshotForAllSteps) {
 					String scrnshtName = captureScreen();
 					scrnshtName = "./screenshots/" + scrnshtName + ".jpg";

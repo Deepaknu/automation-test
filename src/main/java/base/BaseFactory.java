@@ -6,10 +6,7 @@ import java.util.Date;
 import java.util.HashMap;
 import java.util.concurrent.TimeUnit;
 
-import org.openqa.selenium.Alert;
-import org.openqa.selenium.By;
-import org.openqa.selenium.Proxy;
-import org.openqa.selenium.WebDriver;
+import org.openqa.selenium.*;
 import org.openqa.selenium.chrome.ChromeDriver;
 import org.openqa.selenium.chrome.ChromeOptions;
 import org.openqa.selenium.firefox.FirefoxDriver;
@@ -86,14 +83,27 @@ public class BaseFactory extends CoreBase {
 			driver.manage().timeouts().implicitlyWait(implicitlyWait, TimeUnit.SECONDS);
 			driver.manage().timeouts().pageLoadTimeout(maxPageLoadTime, TimeUnit.SECONDS);
 
-			driver.get(url);
-			driver.manage().window().maximize();
-			driver.manage().timeouts().implicitlyWait(implicitlyWait,TimeUnit.SECONDS);
+
+
+
+			try{
+				driver.get(url);
+				Thread.sleep(10000);
+				driver.manage().timeouts().implicitlyWait(implicitlyWait,TimeUnit.SECONDS);
+				driver.manage().window().maximize();
+			}catch (TimeoutException t){
+				t.printStackTrace();
+			}catch (Exception e1){
+				e1.printStackTrace();
+			}
+
 			try{
 				driver.findElement(By.xpath("//div[@class='tophat-close-icon']")).click();
 			}catch (Exception e ){
 
 			}
+
+
 		}
 
 		catch (Exception e) {

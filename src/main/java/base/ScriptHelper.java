@@ -23,8 +23,7 @@ import java.util.Date;
 import java.util.List;
 import java.util.concurrent.TimeUnit;
 
-import static base.BaseFactory.catHash;
-import static base.BaseFactory.reportFolder;
+import static base.BaseFactory.*;
 import static base.CoreBase.*;
 
 public class ScriptHelper {
@@ -125,6 +124,22 @@ public class ScriptHelper {
 		for (String errMsg : errMsgs) {
 			if (pageSrc.toString().toLowerCase().contains(errMsg)) {
 				ErrorMessage = errMsg;
+
+				switch(ErrorMessage.toLowerCase()){
+
+                    case "nomatchesfound":
+                        FailedNomatchLinks.add(getDriver().getCurrentUrl());
+                        break;
+
+                    case "unknownerror":
+                        FailedUnknownLinks.add(getDriver().getCurrentUrl());
+                        break;
+
+                    case "networkerror":
+                        FailedNetworkLinks.add(getDriver().getCurrentUrl());
+                        break;
+                }
+
 				flag = false;
 			}
 		}

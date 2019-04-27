@@ -2,8 +2,10 @@ package base;
 
 import java.io.File;
 import java.net.InetAddress;
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
+import java.util.List;
 import java.util.concurrent.TimeUnit;
 
 import org.openqa.selenium.*;
@@ -30,12 +32,16 @@ import static base.ScriptHelper.getConvertedDate;
 
 public class BaseFactory extends CoreBase {
 	public static String reportFolder = "./results/";
-	private static String browser;
+	public static String reportFileName = "";
+	public static String browser;
 
 	private static boolean userAgentEnable;
 	private static boolean headerEnable;
 	public static ExtentReports extent;
 	public static HashMap<String,String> catHash = new HashMap<>();
+	public static List<String> FailedNomatchLinks = new ArrayList<>();
+	public static List<String> FailedUnknownLinks = new ArrayList<>();
+	public static List<String> FailedNetworkLinks = new ArrayList<>();
 
 	static WebDriver createInstance() {
 
@@ -129,6 +135,7 @@ public class BaseFactory extends CoreBase {
 		dirFile.mkdirs();
 		setReportPath(reportFolder);
 		createReportFile(FILE_NAME);
+		reportFileName = System.getProperty("user.dir")+ reportFolder.substring(1,reportFolder.length()).replaceAll("/","\\\\")+ FILE_NAME.toString();
 		ExtentHtmlReporter htmlReporter = new ExtentHtmlReporter(reportFolder + FILE_NAME);
 		htmlReporter.config().setDocumentTitle("EddieBauer - Automation Execution");
 		htmlReporter.config().setReportName("Smoke Test Suite - Results");

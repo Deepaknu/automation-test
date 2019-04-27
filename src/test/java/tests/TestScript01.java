@@ -138,6 +138,7 @@ public class TestScript01 extends CoreBase {
 
 
 	private void verifyMenuLinks(String menu) {
+
 		try {
 			driver = ScriptHelper.getDriver();
             List<WebElement> catLink = driver.findElements(By.xpath("//*[contains(@class,'styles__CategoriesContainer')]/*/li"));
@@ -146,7 +147,8 @@ public class TestScript01 extends CoreBase {
 						ids.add(catLink.get(i).getAttribute("id"));
 					}
 
-            for ( int i = 0;i<catLink.size();i++ ){
+           for ( int i = 0;i<catLink.size();i++ ){
+			//for ( int i = 0;i<1;i++ ){
 				//catLink = driver.findElements(By.xpath("//*[contains(@class,'styles__CategoriesContainer')]/*/li"));
                 clickonHoverCat(driver.findElement(By.id(ids.get(i))));
 				// open all the urls one by one in the browser.

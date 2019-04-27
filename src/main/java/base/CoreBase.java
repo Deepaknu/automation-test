@@ -21,6 +21,10 @@ import com.aventstack.extentreports.markuputils.MarkupHelper;
 
 import util.LoadConfigFile;
 
+import javax.mail.MessagingException;
+
+import static util.commonfunctions.generateAndSendEmail;
+
 public class CoreBase {
 
 	public static ExtentReports extent;
@@ -40,10 +44,17 @@ public class CoreBase {
 		extent = BaseFactory.createExtentReportInstance();
 	}
 
-	@AfterSuite
+	@AfterSuite(alwaysRun = true)
 	public void afterSuite() {
 		extent.flush();
-		System.out.println("####MESSAGE::ExtentReport- Final report flushed successfully.");
+        try {
+            generateAndSendEmail();
+        } catch (MessagingException e) {
+            e.printStackTrace();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        System.out.println("####MESSAGE::ExtentReport- Final report flushed successfully.");
 
 	}
 

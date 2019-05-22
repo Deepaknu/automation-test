@@ -2,11 +2,11 @@
 <!DOCTYPE suite SYSTEM "http://testng.org/testng-1.0.dtd">
 <suite name="Suite" parallel="methods">
 	<listeners>
-		<listener class-name="base.SuiteListener"></listener>
+		<listener class-name="com.eddiebauer.base.SuiteListener"></listener>
 	</listeners>
 	<test thread-count="5" name="Test" parallel="methods">
 		<classes>
-			<class name="tests.TestScript01" />
+			<class name="com.eddiebauer.tests.TestScript01" />
 		</classes>
 	</test> <!-- Test -->
 </suite> <!-- Suite -->
